@@ -1,6 +1,17 @@
 <template>
     <div class="container">
-        <Header title="Task Tracker App" />
+        <!-- Switch showAddTask to the opposite of it (i.e. toggling) -->
+        <Header
+            @toggle-add-task="this.showAddTask = !this.showAddTask"
+            :showAddTaskInHeader="showAddTask"
+            title="Task Tracker App"
+        />
+        <!-- For conditional rendering, i.e. only show this HTML element if <value> is true, you can either use "v-if" or "v-show" 
+        Generally speaking, v-if has higher toggle costs while v-show has higher initial render costs. So prefer v-show if you need to toggle something very often, and prefer v-if if the condition is unlikely to change at runtime.-->
+        <div v-show="showAddTask">
+            <AddTask @add-task="addTask" />
+        </div>
+
         <!-- We want to dynamically generate the tasks 
         So we set the tasks attribute for the Tasks component with some value(i.e. <Tasks :tasks="myvalue")
         But here, we are not passing in random value, we're passing in what is defined in the data object below: an array of different tasks.-->
@@ -18,10 +29,11 @@
 <script>
 import Header from "./components/Header.vue";
 import Tasks from "./components/Tasks.vue";
+import AddTask from "./components/AddTask.vue";
 
 export default {
     name: "App",
-    components: { Header, Tasks },
+    components: { Header, Tasks, AddTask },
 
     // Two key lessons about data here:
     // 1. Usually we would have data from a backend api, but for this demo, we will define it inside the App inself.
@@ -33,6 +45,9 @@ export default {
             // Theoretically we could define the tasks here, but we will follow the React life cycle method (i.e. we can run specific code at specific time while each component is loaded)
             // Here, we will do something when this component is created.
             tasks: [],
+            // In the UI, you'll have an "Add Task" button that will show/hide the "AddTask" form
+            // We set it to be false at default - user has to click on "Add Task" for the form to be displayed
+            showAddTask: false,
         };
     },
     // This is the created part of the lifecycle (i.e. when the component finally loads)
@@ -60,6 +75,10 @@ export default {
         ];
     },
     methods: {
+        addTask(newTask) {
+            // This is very interesting, we see the spread syntax over here again ("..."), it simply set the this.task to be an array of current task (...tasks), then it appends the newTask.
+            this.tasks = [...this.tasks, newTask];
+        },
         deleteTask(id) {
             // Ask user before you confirm delete
             if (confirm("Confirm Delete?"))

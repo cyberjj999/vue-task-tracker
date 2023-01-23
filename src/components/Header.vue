@@ -2,7 +2,12 @@
     <header>
         <h1>{{ title }}</h1>
         <!-- <h1>Task Tracker</h1> -->
-        <Button text="Add Task" color="green" />
+        <!-- Emit the toggle-add-task action from Button.vue to Header.vue to App.vue -->
+        <Button
+            @btn-click="$emit('toggle-add-task')"
+            :text="showAddTaskInHeader ? 'Close' : 'Add Task'"
+            :color="showAddTaskInHeader ? 'red' : 'green'"
+        />
     </header>
 </template>
 
@@ -30,6 +35,8 @@ export default {
             type: String,
             default: "Task Tracker",
         },
+        // either true/false depending on whether user wants to show the "AddTask" UI or not
+        showAddTaskInHeader: Boolean,
     },
     components: {
         Button,

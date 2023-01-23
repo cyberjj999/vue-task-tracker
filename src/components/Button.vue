@@ -20,7 +20,10 @@ export default {
     },
     // You can also define methods here to use it in your template tag.
     methods: {
-        onClick() {},
+        onClick() {
+            // On click it'll trigger toggle-add-task action
+            this.$emit("btn-click");
+        },
     },
 };
 </script>
